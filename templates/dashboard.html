@@ -1,0 +1,210 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Add URLs to Folder</title>
+<style>
+    /* General Styles */
+    body {
+        font-family: "Georgia", serif; /* A font ideal for reading */
+        background-color: #fdf6e3; /* Soft beige background for a reading tool */
+        margin: 0;
+        padding: 0;
+        color: #333; /* Dark gray for comfortable contrast */
+        line-height: 1.6; /* Improves readability */
+    }
+
+    .container {
+        max-width: 800px;
+        margin: 100px auto;
+        padding: 20px;
+        background-color: #ffffff; /* Light card-like background */
+        border-radius: 10px;
+        box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    }
+
+    h2 {
+        color: #444;
+        text-align: center;
+        margin-bottom: 20px;
+        font-family: "Merriweather", serif; /* Elegant font for headers */
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 5px;
+        color: #555;
+    }
+
+    input[type="text"], input[type="url"] {
+        width: calc(100% - 20px);
+        padding: 12px;
+        margin-bottom: 15px;
+        border: 1px solid #ddd;
+        border-radius: 5px;
+        font-size: 16px;
+    }
+
+    button {
+        padding: 12px 20px;
+        background-color: #007BFF;
+        color: white;
+        border: none;
+        border-radius: 20px; /* Rounded buttons for a modern look */
+        cursor: pointer;
+        font-size: 16px;
+        font-family: "Merriweather", serif;
+    }
+
+    button:hover {
+        background-color: #0056b3;
+    }
+
+    /* Navigation Bar */
+    .navbar {
+        position: fixed;
+        top: 0;
+        width: 100%;
+        background-color: #007BFF;
+        color: white;
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 15px 30px;
+        box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        z-index: 1000;
+    }
+
+    .navbar .nav-left span {
+        font-size: 18px;
+        font-weight: bold;
+        font-family: "Merriweather", serif;
+    }
+
+    .navbar .nav-right a {
+        color: white;
+        text-decoration: none;
+        font-size: 14px;
+        margin-left: 15px;
+        padding: 8px 15px;
+        border-radius: 20px; /* Rounded profile and logout buttons */
+        background-color: #0056b3;
+        transition: background-color 0.3s ease;
+    }
+
+    .navbar .nav-right a:hover {
+        background-color: #004095;
+    }
+
+    /* Add URL Button */
+    #addUrl {
+        background-color: #28a745;
+        margin-top: 10px;
+    }
+
+    #addUrl:hover {
+        background-color: #218838;
+    }
+
+    /* Media Query for Responsive Design */
+    @media (max-width: 600px) {
+        .container {
+            margin: 120px 10px;
+        }
+
+        .navbar span {
+            font-size: 14px;
+        }
+
+        .navbar a {
+            font-size: 12px;
+        }
+    }
+</style>
+</head>
+<body>
+
+<!-- Navigation Bar -->
+<div class="navbar">
+    <div class="nav-left">
+        <span>Ebook Reader Tool</span>
+    </div>
+    <div class="nav-right">
+        <a href="{{ url_for('profile') }}">Profile</a>
+        <a href="{{ url_for('logout') }}">Sign Out</a>
+    </div>
+</div>
+
+<!-- Form Container -->
+<div class="container">
+    <h2>Add Books to Your Library</h2>
+    <form id="urlForm" method="post">
+        <div>
+            <label for="folderName">Folder Name:</label>
+            <input type="text" id="folderName" name="folderName" placeholder="Enter folder name" required>
+        </div>
+        <div id="bookInputs" class="book-inputs">
+            <label for="bookName1">Book Name 1:</label>
+            <input type="text" id="bookName1" name="bookNames[]" placeholder="Enter book name" >
+            <label for="url1">URL 1:</label>
+            <input type="url" id="url1" name="urls[]" placeholder="Enter URL" required>
+        </div>
+        <button type="button" id="addUrl">Add Another Book</button>
+        <br><br>
+        <button type="submit">Submit</button>
+    </form>
+</div>
+
+<script>
+    // Function to create a counter that starts at 1 and increments each time
+    function counter() {
+        let count = 1;
+        return function increment() {
+            count++;
+            return count;
+        };
+    }
+
+    const urlIndexCounter = counter();
+
+    // Function to dynamically add new Book Name and URL input fields
+    function addUrlInput() {
+        const bookInputsDiv = document.getElementById('bookInputs');
+        const numInputs = urlIndexCounter();
+
+        const newBookLabel = document.createElement('label');
+        newBookLabel.setAttribute('for', `bookName${numInputs}`);
+        newBookLabel.textContent = `Book Name ${numInputs}:`;
+
+        const newBookInput = document.createElement('input');
+        newBookInput.setAttribute('type', 'text');
+        newBookInput.setAttribute('id', `bookName${numInputs}`);
+        newBookInput.setAttribute('name', 'bookNames[]');
+        newBookInput.setAttribute('placeholder', 'Enter book name');
+        // newBookInput.setAttribute('required', true);
+
+        const newUrlLabel = document.createElement('label');
+        newUrlLabel.setAttribute('for', `url${numInputs}`);
+        newUrlLabel.textContent = `URL ${numInputs}:`;
+
+        const newUrlInput = document.createElement('input');
+        newUrlInput.setAttribute('type', 'url');
+        newUrlInput.setAttribute('id', `url${numInputs}`);
+        newUrlInput.setAttribute('name', 'urls[]');
+        newUrlInput.setAttribute('placeholder', 'Enter URL');
+        newUrlInput.setAttribute('required', true);
+
+        bookInputsDiv.appendChild(newBookLabel);
+        bookInputsDiv.appendChild(newBookInput);
+        bookInputsDiv.appendChild(newUrlLabel);
+        bookInputsDiv.appendChild(newUrlInput);
+    }
+
+    // Attach the addUrlInput function to the "Add Another Book" button
+    document.getElementById('addUrl').addEventListener('click', addUrlInput);
+</script>
+
+</body>
+</html>

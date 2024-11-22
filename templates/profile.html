@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Profile</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <style>
+        body {
+    font-family: 'Arial', sans-serif;
+    background-color: #f8f9fa;
+    margin: 0;
+    padding: 0;
+}
+
+.profile-container {
+    width: 80%;
+    margin: 30px auto;
+    padding: 30px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.profile-header {
+    text-align: center;
+    margin-bottom: 40px;
+}
+
+.profile-header h1 {
+    font-size: 2.5em;
+    color: #333;
+}
+
+.profile-header .subheading {
+    font-size: 1.1em;
+    color: #888;
+}
+
+.flash-messages {
+    margin-bottom: 20px;
+}
+
+.flash {
+    background-color: #28a745;
+    color: white;
+    padding: 10px;
+    margin-bottom: 10px;
+    border-radius: 5px;
+}
+
+.flash.error {
+    background-color: #dc3545;
+}
+
+.account-details h2, .form-container h2 {
+    font-size: 1.8em;
+    margin-bottom: 20px;
+    color: #333;
+}
+
+.account-info p {
+    font-size: 1.1em;
+    line-height: 1.6;
+    color: #555;
+}
+
+.form-container {
+    background-color: #f1f1f1;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.form-group {
+    margin-bottom: 20px;
+}
+
+.form-group label {
+    font-size: 1.1em;
+    font-weight: bold;
+    color: #333;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 10px;
+    margin-top: 5px;
+    font-size: 1.1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+.form-group input:focus {
+    border-color: #007bff;
+    outline: none;
+}
+
+.form-group input[type="submit"] {
+    background-color: #007bff;
+    color: white;
+    font-size: 1.2em;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    padding: 12px 20px;
+}
+
+.form-group input[type="submit"]:hover {
+    background-color: #0056b3;
+}
+
+    </style>
+</head>
+
+<body>
+    <div class="profile-container">
+        <div class="profile-header">
+            <h1>Welcome, {{ current_user.username }}!</h1>
+            <p class="subheading">Manage your Instapaper account details below</p>
+        </div>
+
+        <!-- Display Success Flash Message -->
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                <div class="flash-messages">
+                    {% for category, message in messages %}
+                        <div class="flash {{ category }}">{{ message }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+        {% endwith %}
+
+        <!-- Instapaper Account Details Section -->
+        <div class="account-details">
+            <h2>Your Instapaper Account</h2>
+            {% if instapaper_account %}
+                <div class="account-info">
+                    <p><strong>Is Verified:</strong> {{ instapaper_account.is_verified }}</p>
+                    <p id="apiToken" style="display: none;"><strong>API Token:</strong> {{ current_user.api_token }}</p>
+
+                    <!-- Button to toggle visibility -->
+                    <button onclick="toggleVisibility()">Show/Hide API Token</button>
+                
+                    <script>
+                        function toggleVisibility() {
+                            const apiToken = document.getElementById("apiToken");
+                            // Toggle between `none` and `block` display
+                            apiToken.style.display = apiToken.style.display === "none" ? "block" : "none";
+                        }
+                    </script>
+                </div>
+            {% else %}
+                <p>You haven't linked an Instapaper account yet.</p>
+            {% endif %}
+        </div>
+        
+
+        <!-- Form to Add/Update Instapaper Account -->
+        <div class="form-container">
+            <h2>Update Instapaper Account Details</h2>
+            <form method="POST" class="instapaper-form">
+                {{ form.hidden_tag() }}
+                <div class="form-group">
+                    {{ form.consumer_key.label }}<br>
+                    {{ form.consumer_key(size=32) }}<br>
+                </div>
+                <div class="form-group">
+                    {{ form.consumer_secret.label }}<br>
+                    {{ form.consumer_secret(size=32) }}<br>
+                </div>
+                <div class="form-group">
+                    {{ form.iname.label }}<br>
+                    {{ form.iname(size=32) }}<br>
+                </div>
+                <div class="form-group">
+                    {{ form.password.label }}<br>
+                    {{ form.password(size=32) }}<br>
+                </div>
+                <div class="form-group">
+                    {{ form.submit() }}
+                </div>
+            </form>
+        </div>
+    </div>
+    <div style="text-align: center; margin-top: 20px;">
+        <a href="{{ url_for('dashboard') }}" class="dashboard-button">Go Back to Dashboard</a>
+    </div>
+</div>
+</body>
+
+</html>

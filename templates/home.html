@@ -1,0 +1,324 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tread - Convert Websites to eBooks</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2ecc71;
+            --background-color: #f4f6f7;
+            --text-color: #2c3e50;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Inter', sans-serif;
+        }
+
+        body {
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            display: flex;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            padding: 1rem 0;
+        }
+
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .auth-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+
+        .btn {
+            text-decoration: none;
+            padding: 0.5rem 1rem;
+            border-radius: 5px;
+            transition: all 0.3s ease;
+        }
+
+        .btn-login {
+            background-color: var(--primary-color);
+            color: white;
+        }
+
+        .btn-register {
+            background-color: var(--secondary-color);
+            color: white;
+        }
+
+        .hero {
+            display: flex;
+            align-items: center;
+            gap: 3rem;
+            margin-top: 4rem;
+        }
+
+        .hero-content {
+            flex: 1;
+        }
+
+        .hero-title {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            color: var(--text-color);
+        }
+
+        .hero-description {
+            font-size: 1.2rem;
+            margin-bottom: 2rem;
+            color: #4a4a4a;
+        }
+
+        .hero-images {
+            display: flex;
+            gap: 2rem;
+        }
+
+        .image-container {
+            position: relative;
+            width: 300px;
+            height: 400px;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .image-container:hover {
+            transform: scale(1.05);
+        }
+
+        .image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.3);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .image-container:hover .overlay {
+            opacity: 1;
+        }
+
+        .overlay-text {
+            color: white;
+            text-align: center;
+            padding: 1rem;
+        }
+
+        .faq-section {
+            margin-top: 4rem;
+            width: 100%;
+            max-width: 800px;
+        }
+
+        .faq-title {
+            text-align: center;
+            margin-bottom: 2rem;
+            font-size: 2rem;
+        }
+
+        .faq-item {
+            background-color: white;
+            border-radius: 10px;
+            margin-bottom: 1rem;
+            padding: 1.5rem;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        }
+
+        .faq-question {
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .faq-answer {
+            display: none;
+            margin-top: 1rem;
+        }
+
+        .faq-toggle {
+            transition: transform 0.3s ease;
+        }
+
+        .footer {
+            margin-top: 4rem;
+            width: 100%;
+            text-align: center;
+            padding: 2rem 0;
+            background-color: white;
+        }
+
+        .social-links {
+            display: flex;
+            justify-content: center;
+            gap: 1.5rem;
+            margin-top: 1rem;
+        }
+
+        .social-links a {
+            color: var(--primary-color);
+            font-size: 1.5rem;
+            text-decoration: none;
+        }
+
+        @media (max-width: 768px) {
+            .hero {
+                flex-direction: column;
+            }
+            .hero-images {
+                flex-direction: column;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">Tread</div>
+            <div class="auth-buttons">
+                <a href="{{ url_for('login') }}" class="btn btn-login">Login</a>
+                <a href="{{ url_for('register') }}" class="btn btn-register">Register</a>
+            </div>
+        </header>
+
+        <section class="hero">
+            <div class="hero-content">
+                <h1 class="hero-title">Transform Websites into Seamless eBooks</h1>
+                <p class="hero-description">
+                    Tired of struggling with web content on your e-reader? Tread converts any website into a beautifully formatted, easy-to-read eBook. Navigate smoothly, read comfortably.
+                </p>
+            </div>
+            <div class="hero-images">
+                <div class="image-container" id="image1">
+                    <img src="https://images.pexels.com/photos/7974/pexels-photo.jpg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1" alt="Website Conversion">
+                    <div class="overlay">
+                        <div class="overlay-text">
+                            <h3>Instant Conversion</h3>
+                            <p>Transform web content in seconds</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="image-container" id="image2">
+                    <img src="https://images.unsplash.com/photo-1522252234503-e356532cafd5?q=80&w=2025&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D" alt="API Integration">
+                    <div class="overlay">
+                        <div class="overlay-text">
+                            <h3>Powerful API</h3>
+                            <p>Convert up to 300 websites instantly</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section class="faq-section">
+            <h2 class="faq-title">Frequently Asked Questions</h2>
+            
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    How does Tread convert websites to eBooks?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    Tread uses advanced parsing technology to extract content from websites, clean up the layout, and convert it into a readable eBook format compatible with most e-readers.
+                </div>
+            </div>
+
+            <div class="faq-item">
+                <div class="faq-question" onclick="toggleFAQ(this)">
+                    Is there a limit to the number of websites I can convert?
+                    <span class="faq-toggle">+</span>
+                </div>
+                <div class="faq-answer">
+                    With our API, you can convert up to 300 websites instantly. For individual users, we offer flexible plans to suit different conversion needs.
+                </div>
+            </div>
+        </section>
+
+        <footer class="footer">
+            <div>© 2024 Tread. All Rights Reserved.</div>
+            <div class="social-links">
+                <a href="#" target="_blank"><i class="fab fa-twitter"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-linkedin"></i></a>
+                <a href="#" target="_blank"><i class="fab fa-github"></i></a>
+            </div>
+        </footer>
+    </div>
+
+    <script>
+        // Interactive image hover effects
+        const images = document.querySelectorAll('.image-container');
+        
+        images.forEach(image => {
+            image.addEventListener('mousemove', (e) => {
+                const rect = image.getBoundingClientRect();
+                const x = e.clientX - rect.left;
+                const y = e.clientY - rect.top;
+                
+                image.style.transform = `perspective(500px) rotateX(${-(y - rect.height/2)/20}deg) rotateY(${(x - rect.width/2)/20}deg)`;
+            });
+
+            image.addEventListener('mouseleave', () => {
+                image.style.transform = 'none';
+            });
+        });
+
+        // FAQ Toggle Function
+        function toggleFAQ(element) {
+            const answer = element.nextElementSibling;
+            const toggle = element.querySelector('.faq-toggle');
+            
+            if (answer.style.display === 'block') {
+                answer.style.display = 'none';
+                toggle.textContent = '+';
+            } else {
+                answer.style.display = 'block';
+                toggle.textContent = '-';
+            }
+        }
+    </script>
+</body>
+</html>
